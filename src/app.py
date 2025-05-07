@@ -34,18 +34,6 @@ st.markdown(
 
 st.image("static/features-bg.jpg",  use_container_width=True)
 
-# st.markdown(
-#     """
-#     <div style="position: relative; text-align: center;">
-#         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-#             font-size: 36px; color: white; background: rgba(0, 0, 0, 0.5); padding: 10px;">
-#             Track Your Fitness Smarter 💪🔥
-#         </div>
-#     </div>
-#     """,
-#     unsafe_allow_html=True
-# )
-
 with open("../models/pipelines.pkl", "rb") as f:
     pipelines = pickle.load(f)
 
@@ -100,5 +88,18 @@ input_data = pd.DataFrame([user_input])
 # })
 
 if st.button("Predict"):
-    prediction = model.predict(input_data)
-    st.success(f"Estimated {target_feature}: {prediction[0]:.2f}")
+    if model_option == "Workout Duration" and calories > 300:
+        st.warning("⚠️ Calories burned must be **300 or less** for accurate predictions.")
+
+    elif model_option == "Calories to Burn" and duration > 30:
+        st.warning("⚠️ Workout duration must be **30 minutes or less** for accurate predictions.")
+    
+    else:
+        prediction = model.predict(input_data)
+
+        if target_feature == "Duration":
+            minutes, seconds = divmod(int(prediction[0] * 60), 60)
+            st.success(f"Estimated Workout Duration:  **{minutes}mins {seconds}sec**")
+
+        else:
+            st.success(f"Estimated {target_feature}: {prediction[0]:.2f}")
