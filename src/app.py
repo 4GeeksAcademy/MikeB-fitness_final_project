@@ -1,77 +1,49 @@
-import pickle
 import pandas as pd
 import streamlit as st
 
-st.markdown(
-    """
-    <style>
-    /* 🔹 Background Gradient */
-    .stApp {
-        background: linear-gradient(to bottom, #0F2027, #203A43, #2C5364);
-    }
-    
-    /* 🔹 Custom Styled Buttons */
-    .stButton>button {
-        background-color: #32CD32;
-        color: white;
-        font-size: 16px;
-        border-radius: 10px;
-        transition: 0.3s;
-    }
-    .stButton>button:hover {
-        background-color: #228B22;
-        transform: scale(1.05);
-    }
-    .stSuccess {
-        font-size: 18px;
-        font-weight: bold;
-        color: #1E90FF;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+from configuration import set_global_styles, load_pipelines, get_user_input, validate_inputs, make_prediction
 
+# Apply global styles
+set_global_styles()
+
+# Display hero image
 st.image("static/features-bg.jpg",  use_container_width=True)
 
-with open("../models/pipelines.pkl", "rb") as f:
-    pipelines = pickle.load(f)
+# Load pipelines
+pipelines = load_pipelines()
 
-# print(pipelines.keys())  # Shows all available keys in the dictionary
-
-# model = pipelines["calorie_model_pipeline"]
-
-# print(type(model))  # Should output <class 'sklearn.pipeline.Pipeline'>
-
+# App Title
 st.markdown("<h1 style='text-align: center; color: #FFD700;'>Fitness Prediction App 🏋️‍♂️♂️</h1>", unsafe_allow_html=True)
 st.write("Enter details to predict fitness expenditure.")
 
+# Model Selection
 model_option = st.selectbox("Select how many calories you want to burn today, or How much time you have available to workout:", ["Calories to Burn", "Workout Duration"])
 
-col1, col2 = st.columns(2)
-
-with col1:
-    age = st.number_input("Age", min_value=1, max_value=100)
-    gender = st.selectbox("Gender", ["Male", "Female"])
-
-with col2:
-    height = st.number_input("Height (cm)", min_value=100, max_value=250)
-    weight = st.number_input("Weight (kg)", min_value=20, max_value=200)
-
-if model_option == "Calories to Burn": 
-    model = pipelines["calorie_model_pipeline"]
-    duration = st.number_input("Workout Duration (mins)", min_value=1, max_value=300)
-    user_input = {"Age": age, "Gender": gender, "Height": height, "Weight": weight, "Duration": duration}
-    target_feature = "Calories"
-
-elif model_option == "Workout Duration": 
-    model = pipelines["time_model_pipeline"]
-    calories = st.number_input("Calories Burned", min_value=10, max_value=2000)
-    user_input = {"Age": age, "Gender": gender, "Height": height, "Weight": weight, "Calories": calories}
-    target_feature = "Duration"
-
-
+# Get user input
+user_input, target_feature = get_user_input(model_option)
 input_data = pd.DataFrame([user_input])
+
+# Select model based on user choice
+model = pipelines["calorie_model_pipeline"] if model_option == "Calories to Burn" else pipelines["time_model_pipeline"]
+
+# Prediction logic
+if st.button("Predict"):
+    warning_msg = validate_inputs(model_option, user_input)
+    if warning_msg:
+        st.warning(warning_msg)  # Show warning and stop execution
+
+    else:
+        result = make_prediction(model, input_data, target_feature)
+        st.success(result)  # Display prediction
+
+# ----- '''Very First Basic Draft''' -----
+
+# with open("../models/pipelines.pkl", "rb") as f:
+    # pipelines = pickle.load(f)
+# print(pipelines.keys())  # Shows all available keys in the dictionary
+
+# model = pipelines["calorie_model_pipeline"]
+# print(type(model))  # Should output <class 'sklearn.pipeline.Pipeline'>
 
 # age = st.number_input("Age", min_value=1, max_value=100)
 # gender = st.selectbox("Gender", ["Male", "Female"])
@@ -86,20 +58,3 @@ input_data = pd.DataFrame([user_input])
 #     "Weight": [weight],
 #     "Duration": [duration]
 # })
-
-if st.button("Predict"):
-    if model_option == "Workout Duration" and calories > 300:
-        st.warning("⚠️ Calories burned must be **300 or less** for accurate predictions.")
-
-    elif model_option == "Calories to Burn" and duration > 30:
-        st.warning("⚠️ Workout duration must be **30 minutes or less** for accurate predictions.")
-    
-    else:
-        prediction = model.predict(input_data)
-
-        if target_feature == "Duration":
-            minutes, seconds = divmod(int(prediction[0] * 60), 60)
-            st.success(f"Estimated Workout Duration:  **{minutes}mins {seconds}sec**")
-
-        else:
-            st.success(f"Estimated {target_feature}: {prediction[0]:.2f}")
