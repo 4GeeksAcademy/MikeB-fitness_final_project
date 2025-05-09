@@ -6,8 +6,10 @@
 
 # Fitness Calorie & Duration Prediction
 
+
+
 This project uses machine learning to predict the number of calories burned, based on the estimated duration of the workout OR recommends a duration of workout to meet a desired calorie output. 
-➡️ [View the live application here](<link>)
+➡️ [View the Live App](https://fitness-final-project.onrender.com)
 
 ---
 
