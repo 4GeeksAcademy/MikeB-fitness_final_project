@@ -24,7 +24,16 @@ Our final model uses **Gradient Boosting** (XGBoost) and achieves strong predict
 
 
 
-placeholders- *Left: Actual vs Predicted Calories | Right: Actual vs Predicted Time*
+## Performance Visualization
+
+Below are two key visuals demonstrating the performance of our Gradient Boosting model:
+
+<div align="center">
+  <img src="predicted_vs_actual.png" alt="Predicted vs Actual Calories" width="45%" style="display: inline-block; margin-right: 2%;" />
+  <img src="learning_curve.png" alt="Learning Curve" width="45%" style="display: inline-block;" />
+</div>
+
+*Left: Actual vs Predicted Calories | Right: Model Learning Curve (Train vs Validation R²)*
 
 
 ---
