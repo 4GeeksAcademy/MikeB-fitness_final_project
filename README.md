@@ -6,8 +6,10 @@
 
 # Fitness Calorie & Duration Prediction
 
+
+
 This project uses machine learning to predict the number of calories burned, based on the estimated duration of the workout OR recommends a duration of workout to meet a desired calorie output. 
-➡️ [View the live application here](<link>)
+➡️ [View the Live App](https://fitness-final-project.onrender.com)
 
 ---
 
@@ -24,7 +26,16 @@ Our final model uses **Gradient Boosting** (XGBoost) and achieves strong predict
 
 
 
-placeholders- *Left: Actual vs Predicted Calories | Right: Actual vs Predicted Time*
+## Performance Visualization
+
+Below are two key visuals demonstrating the performance of our Gradient Boosting model:
+
+<div align="center">
+  <img src="notebooks/predicted_vs_actual.png" alt="Predicted vs Actual Calories" width="45%" style="display: inline-block; margin-right: 2%;" />
+  <img src="notebooks/Learning_Curve.png" alt="Learning Curve" width="45%" style="display: inline-block;" />
+</div>
+
+*Left: Actual vs Predicted Calories | Right: Model Learning Curve (Train vs Validation R²)*
 
 
 ---
