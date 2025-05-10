@@ -13,7 +13,7 @@ st.image("static/features-bg.jpg",  use_container_width=True)
 pipelines = load_pipelines()
 
 # App Title
-st.markdown("<h1 style='text-align: center; color: #FFD700;'>Fitness Prediction App 🏋️‍♂️♂️</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #FFD700;'>Fitness Prediction App 🏋️‍♂️♀️♂️</h1>", unsafe_allow_html=True)
 st.write("Enter details to predict fitness expenditure.")
 
 # Model Selection
